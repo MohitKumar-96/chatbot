@@ -5,7 +5,7 @@ import streamlit as st
 # PAGE CONFIGURATION & STYLING
 # ==========================================
 st.set_page_config(
-    page_title="College Student Chatbot",
+    page_title="Marwadi University Chatbot",
     page_icon="🎓",
     layout="centered"
 )
@@ -14,6 +14,9 @@ st.set_page_config(
 # COLLEGE INFORMATION / DATES DATABASE
 # ==========================================
 COLLEGE_INFO = {
+    "name": "Marwadi University",
+    "location": "Rajkot, Gujarat, India",
+    "accreditation": "NAAC A+ Grade Accredited Institution",
     "admission_start": "01 June 2026",
     "admission_last_date": "30 July 2026",
     "semester_start": "15 July 2026",
@@ -23,17 +26,19 @@ COLLEGE_INFO = {
     "assignment_deadline": "25 November 2026",
     "scholarship_last_date": "31 August 2026",
     "event_date": "10 October 2026",
-    "library_open": "9:00 AM",
-    "library_close": "5:00 PM",
+    "library_weekday": "8:30 AM - 8:00 PM (Monday to Saturday)",
+    "library_weekend": "10:00 AM - 4:00 PM (Sunday & Public Holidays)",
     "college_open": "9:00 AM",
-    "college_close": "4:00 PM",
+    "college_close": "4:30 PM",
     "hostel_application": "30 June 2026",
     "placement_start": "05 January 2027",
+    "website": "www.marwadiuniversity.ac.in",
+    "helpline": "+91 281 7123456"
 }
 
 TOPICS_LIST = [
-    "Admission", "Courses", "Fees", "Timetable", "Attendance",
-    "Exams", "Assignments", "Library", "Hostel", "Scholarship",
+    "My College", "Admission", "Courses", "Fees", "Timetable", "Attendance",
+    "Exams", "Assignments", "Library Timings", "Hostel", "Scholarship",
     "Placement", "Faculty", "College Events", "Transport", "ID Card",
     "Contact Information", "College Timings", "Leave Application",
     "Semester", "Today / Date", "Greeting", "Exit"
@@ -57,12 +62,12 @@ def generate_help_text():
         "### I can help you with these topics:\n"
         f"{topics_formatted}\n\n"
         "**Example questions:**\n"
+        "- *Tell me about my college*\n"
+        "- *How are you?*\n"
+        "- *What are the library timings?*\n"
         "- *When is admission?*\n"
         "- *When are exams?*\n"
-        "- *What is the assignment deadline?*\n"
-        "- *When does the semester start?*\n"
-        "- *What are the library timings?*\n"
-        "- *When is the scholarship deadline?*"
+        "- *What is the assignment deadline?*"
     )
 
 # ==========================================
@@ -72,9 +77,27 @@ def chatbot_response(user_input):
     """Processes user input and returns matching responses based on keyword triggers."""
     text = user_input.lower().strip()
 
+    # Friendly Check-in / How are you
+    if any(phrase in text for phrase in ["how are you", "how are u", "how r u", "how do you do"]):
+        return (
+            "😊 I'm doing great, thank you for asking!\n"
+            "I'm ready to help you with any questions about **Marwadi University**. What would you like to know today?"
+        )
+
     # Greetings
-    if any(word in text for word in ["hello", "hi", "hey", "hii", "good morning", "good afternoon"]):
-        return "Hello! 👋\nHow can I help you with your college questions?"
+    elif any(word in text for word in ["hello", "hi", "hey", "hii", "good morning", "good afternoon", "good evening"]):
+        return "Hello! 👋 Welcome to your **Marwadi University Assistant**.\nHow can I help you today?"
+
+    # College Information (Marwadi University)
+    elif any(word in text for word in ["my college", "about college", "marwadi", "marwadi university", "stored college", "stured college", "university details"]):
+        return (
+            f"🏛️ **ABOUT {COLLEGE_INFO['name'].upper()}**\n\n"
+            f"- **Institution:** {COLLEGE_INFO['name']} ({COLLEGE_INFO['accreditation']})\n"
+            f"- **Location:** {COLLEGE_INFO['location']}\n"
+            f"- **Official Website:** [{COLLEGE_INFO['website']}](https://{COLLEGE_INFO['website']})\n"
+            f"- **Helpline:** {COLLEGE_INFO['helpline']}\n\n"
+            "Marwadi University offers diploma, undergraduate, postgraduate, and doctoral programs across Engineering, Management, Computer Applications, Pharmacy, Science, Law, and Architecture."
+        )
 
     # Help
     elif "help" in text or "what can you do" in text:
@@ -84,185 +107,189 @@ def chatbot_response(user_input):
     elif any(word in text for word in ["today", "date", "current date", "what day is today"]):
         return show_today()
 
+    # Library Timings (With Days)
+    elif any(word in text for word in ["library", "book", "books", "library time", "library timing", "library hours"]):
+        return (
+            "📖 **CENTRAL LIBRARY TIMINGS**\n\n"
+            f"- 🗓️ **Monday to Saturday:** {COLLEGE_INFO['library_weekday']}\n"
+            f"- 🗓️ **Sunday & Public Holidays:** {COLLEGE_INFO['library_weekend']}\n\n"
+            "📌 *Note:* A valid Student ID card is mandatory for borrowing books and entering reading zones."
+        )
+
     # Admission
     elif any(word in text for word in ["admission", "admissions", "enroll", "enrollment"]):
         return (
             "📌 **ADMISSION INFORMATION**\n\n"
             f"- **Admission starts:** {COLLEGE_INFO['admission_start']}\n"
             f"- **Last date to apply:** {COLLEGE_INFO['admission_last_date']}\n\n"
-            "Required documents may include marksheets, ID proof, photographs, and application forms.\n"
-            "Please check your college's official admission office for final requirements."
+            "Required documents: 10th/12th marksheets, graduation degree (if applicable), ID proof, photographs, and entrance scorecards.\n"
+            "Visit the Marwadi University Admission Cell for registration assistance."
         )
 
     # Courses
     elif any(word in text for word in ["course", "courses", "degree", "program", "programs", "branch", "department"]):
         return (
-            "📚 **COURSES**\n\n"
-            "Common college programs include BCA, B.Tech, B.Sc, B.Com, BBA, BA, MCA, and MBA.\n"
-            "The exact courses depend on your college curriculum.\n"
-            "Course information is normally updated before the admission period."
+            "📚 **COURSES OFFERED**\n\n"
+            "Marwadi University provides programs in:\n"
+            "- **Technology:** B.Tech, M.Tech, Diploma Engineering\n"
+            "- **Computer Applications:** BCA, MCA\n"
+            "- **Management:** BBA, MBA\n"
+            "- **Sciences & Pharmacy:** B.Sc, M.Sc, B.Pharm\n"
+            "- **Other Streams:** Law, Architecture, Physiotherapy, Nursing"
         )
 
     # Fees
     elif any(word in text for word in ["fee", "fees", "tuition", "payment", "cost"]):
         return (
             "💳 **FEES INFORMATION**\n\n"
-            "College fees may include tuition, examination, library, and other service charges.\n"
-            "Fee payment dates are usually announced before each semester.\n"
-            "Please check your student portal or accounts department for details."
+            "Fees cover tuition, laboratory, examination, and student activity charges.\n"
+            "Semester fee deadlines are published on your Marwadi University Student Portal (ERP).\n"
+            "Contact the Accounts Department for payment receipts or installment queries."
         )
 
     # Timetable
     elif any(word in text for word in ["timetable", "schedule", "class timing", "class schedule", "lecture"]):
         return (
-            "🗓️ **TIMETABLE**\n\n"
-            "Your class timetable is available through the student portal or notice board.\n"
-            f"- **Semester starts:** {COLLEGE_INFO['semester_start']}\n\n"
-            "Check your department for your exact daily schedule."
+            "🗓️ **CLASS TIMETABLE**\n\n"
+            "Your weekly lecture schedule is updated on the Student Portal / ERP app.\n"
+            f"- **Upcoming Semester Starts:** {COLLEGE_INFO['semester_start']}\n\n"
+            "Check your department notice board for updates."
         )
 
     # Attendance
     elif any(word in text for word in ["attendance", "absent", "present", "attendance percentage"]):
         return (
-            "📊 **ATTENDANCE**\n\n"
-            "Regularly check your attendance percentage via the student portal.\n"
-            f"- **Current semester period:** {COLLEGE_INFO['semester_start']} to {COLLEGE_INFO['semester_end']}\n\n"
-            "For shortages, reach out directly to your academic mentor or department head."
+            "📊 **ATTENDANCE POLICY**\n\n"
+            "Students are required to maintain a minimum attendance threshold (usually 75%).\n"
+            f"- **Semester Window:** {COLLEGE_INFO['semester_start']} to {COLLEGE_INFO['semester_end']}\n\n"
+            "Track daily attendance directly via the Student ERP portal."
         )
 
     # Exams
     elif any(word in text for word in ["exam", "exams", "examination", "test", "semester exam"]):
         return (
-            "📝 **EXAM INFORMATION**\n\n"
-            f"- **Exam starts:** {COLLEGE_INFO['exam_start']}\n"
-            f"- **Exam ends:** {COLLEGE_INFO['exam_end']}\n\n"
-            "Remember to download your admit card beforehand. Final schedules are confirmed by the exam cell."
+            "📝 **EXAM SCHEDULE**\n\n"
+            f"- **End-Semester Exams Start:** {COLLEGE_INFO['exam_start']}\n"
+            f"- **Exams End:** {COLLEGE_INFO['exam_end']}\n\n"
+            "Ensure you collect your examination hall ticket from the portal prior to exam week."
         )
 
     # Assignments
     elif any(word in text for word in ["assignment", "assignments", "project", "homework", "submission"]):
         return (
-            "📑 **ASSIGNMENT INFORMATION**\n\n"
-            f"- **Assignment deadline:** {COLLEGE_INFO['assignment_deadline']}\n\n"
-            "Ensure you follow your professor's submission format guidelines and keep a backup copy."
-        )
-
-    # Library
-    elif any(word in text for word in ["library", "book", "books"]):
-        return (
-            "📖 **LIBRARY**\n\n"
-            f"- **Library opens:** {COLLEGE_INFO['library_open']}\n"
-            f"- **Library closes:** {COLLEGE_INFO['library_close']}\n\n"
-            "A valid student ID card is required for borrowing physical books."
+            "📑 **ASSIGNMENT SUBMISSION**\n\n"
+            f"- **General Submission Deadline:** {COLLEGE_INFO['assignment_deadline']}\n\n"
+            "Upload digital submissions to the LMS platform or hand over hard copies to your subject faculty."
         )
 
     # Hostel
     elif any(word in text for word in ["hostel", "room", "accommodation", "dormitory"]):
         return (
-            "🏢 **HOSTEL**\n\n"
-            f"- **Hostel application deadline:** {COLLEGE_INFO['hostel_application']}\n\n"
-            "For room availability, fees, and house rules, contact the hostel administration office."
+            "🏢 **HOSTEL ACCOMMODATION**\n\n"
+            f"- **Application Deadline:** {COLLEGE_INFO['hostel_application']}\n\n"
+            "Marwadi University offers AC and Non-AC hostel rooms with mess facilities, Wi-Fi, and 24/7 security."
         )
 
     # Scholarship
     elif any(word in text for word in ["scholarship", "financial aid", "financial assistance"]):
         return (
-            "🎓 **SCHOLARSHIP**\n\n"
-            f"- **Application deadline:** {COLLEGE_INFO['scholarship_last_date']}\n\n"
-            "Eligibility depends on merit, financial need, or category. Verify via the official scholarship portal."
+            "🎓 **SCHOLARSHIPS**\n\n"
+            f"- **Application Deadline:** {COLLEGE_INFO['scholarship_last_date']}\n\n"
+            "Merit-based, GATE, and category scholarships are available for eligible students."
         )
 
     # Placement
     elif any(word in text for word in ["placement", "placements", "job", "jobs", "career", "campus"]):
         return (
-            "💼 **PLACEMENT**\n\n"
-            f"- **Expected drive start:** {COLLEGE_INFO['placement_start']}\n\n"
-            "The placement cell conducts training drives, interviews, and aptitude tests."
+            "💼 **TRAINING & PLACEMENTS**\n\n"
+            f"- **Placement Drives Begin:** {COLLEGE_INFO['placement_start']}\n\n"
+            "The Marwadi University Placement Cell organizes campus drives, mock interviews, and skill workshops."
         )
 
     # Faculty
     elif any(word in text for word in ["faculty", "teacher", "teachers", "professor", "professors"]):
         return (
-            "👨‍🏫 **FACULTY**\n\n"
-            "Directory details are listed on the department site or board.\n"
-            "Contact your department office for specific faculty office hours."
+            "👨‍🏫 **FACULTY DIRECTORY**\n\n"
+            "Faculty profiles and contact details are available on your department portal page.\n"
+            "Consult your department secretary for office hours."
         )
 
     # Events
     elif any(word in text for word in ["event", "events", "festival", "fest", "function", "program"]):
         return (
-            "🎉 **COLLEGE EVENTS**\n\n"
-            f"- **Next major event:** {COLLEGE_INFO['event_date']}\n\n"
-            "Includes cultural fests, technical symposia, sports, and workshops."
+            "🎉 **CAMPUS EVENTS**\n\n"
+            f"- **Next Major Cultural Event:** {COLLEGE_INFO['event_date']}\n\n"
+            "Includes tech fests, sports meets, cultural nights, and guest speaker sessions."
         )
 
     # Transport
     elif any(word in text for word in ["bus", "transport", "transportation"]):
         return (
-            "🚌 **TRANSPORT**\n\n"
-            "College buses operate across predefined regional routes.\n"
-            "Contact the transport office for route updates, timings, and pass fees."
+            "🚌 **BUS TRANSPORT**\n\n"
+            "Buses cover major routes across Rajkot city.\n"
+            "Check the transport desk for route numbers, timings, and semester bus pass fees."
         )
 
     # ID Card
     elif any(word in text for word in ["id card", "identity card", "student card"]):
         return (
-            "🪪 **ID CARD**\n\n"
-            "Required for entry, exams, and library issuance.\n"
-            "Report lost or damaged cards to the student affairs office immediately."
+            "🪪 **STUDENT ID CARD**\n\n"
+            "Mandatory for campus entry, library access, and exam attendance.\n"
+            "Report lost cards to the Student Affairs desk immediately for re-issuance."
         )
 
     # Contact
     elif any(word in text for word in ["contact", "phone number", "email", "office", "contact number"]):
         return (
-            "📞 **CONTACT INFORMATION**\n\n"
-            "Official helpline numbers and administrative emails are hosted on the main college website."
+            "📞 **CONTACT DETAILS**\n\n"
+            f"- **Campus:** {COLLEGE_INFO['name']}, Rajkot-Morbi Highway, Gujarat\n"
+            f"- **Helpline:** {COLLEGE_INFO['helpline']}\n"
+            f"- **Website:** [{COLLEGE_INFO['website']}](https://{COLLEGE_INFO['website']})"
         )
 
     # Timings
     elif any(word in text for word in ["college timing", "college timings", "working hours", "opening time", "college hours"]):
         return (
             "⏰ **COLLEGE TIMINGS**\n\n"
-            f"- **Opening time:** {COLLEGE_INFO['college_open']}\n"
-            f"- **Closing time:** {COLLEGE_INFO['college_close']}\n\n"
-            "Timings may vary slightly during exams or official holidays."
+            f"- **College Opens:** {COLLEGE_INFO['college_open']}\n"
+            f"- **College Closes:** {COLLEGE_INFO['college_close']}\n\n"
+            "Administrative offices operate Monday through Saturday."
         )
 
     # Leave Application
     elif any(word in text for word in ["leave", "leave application", "holiday", "absence"]):
         return (
             "📝 **LEAVE APPLICATION**\n\n"
-            "Submit an application to your faculty mentor prior to planned absences.\n"
-            "Medical leaves require valid doctor certificates upon return."
+            "Submit leave requests via the Student Portal or hand a signed application to your Faculty Mentor."
         )
 
     # Semester
     elif any(word in text for word in ["semester", "semester start", "semester end"]):
         return (
-            "📅 **SEMESTER DATES**\n\n"
-            f"- **Start date:** {COLLEGE_INFO['semester_start']}\n"
-            f"- **End date:** {COLLEGE_INFO['semester_end']}\n"
-            f"- **Exam window:** {COLLEGE_INFO['exam_start']} to {COLLEGE_INFO['exam_end']}"
+            "📅 **SEMESTER TIMELINE**\n\n"
+            f"- **Start Date:** {COLLEGE_INFO['semester_start']}\n"
+            f"- **End Date:** {COLLEGE_INFO['semester_end']}\n"
+            f"- **Exams:** {COLLEGE_INFO['exam_start']} to {COLLEGE_INFO['exam_end']}"
         )
 
     # Thanks
     elif any(word in text for word in ["thank you", "thanks", "thank"]):
-        return "You're welcome! 😊 Let me know if you need anything else."
+        return "You're welcome! 😊 Let me know if you need any more details about Marwadi University."
 
     # Bye / Exit
     elif any(word in text for word in ["bye", "goodbye", "exit", "quit"]):
-        return "Goodbye! 👋 Wishing you all the best with your studies!"
+        return "Goodbye! 👋 Wishing you academic success at Marwadi University!"
 
     # Fallback
     else:
         return (
             "🤖 I don't quite understand that question yet.\n\n"
             "**Try asking queries like:**\n"
+            "- *Tell me about my college*\n"
+            "- *How are you?*\n"
+            "- *What are the library timings?*\n"
             "- *When are my exams?*\n"
-            "- *When is admission?*\n"
-            "- *What is the assignment deadline?*\n"
-            "- *When does the semester start?*\n"
-            "- *What are the library timings?*\n\n"
+            "- *When is admission?*\n\n"
             "Or type **'help'** to see all supported topics."
         )
 
@@ -270,20 +297,21 @@ def chatbot_response(user_input):
 # STREAMLIT UI LAYOUT & LOGIC
 # ==========================================
 
-st.title("🎓 College Student Assistant")
-st.caption("Ask questions about college schedules, admissions, exams, and guidelines.")
+st.title("🎓 Marwadi University Assistant")
+st.caption("Ask questions about campus details, library hours, schedules, admissions, and exams.")
 
-# Sidebar Navigation & Info
+# Sidebar Navigation & Quick Access
 with st.sidebar:
     st.header("⚙️ Chatbot Info")
-    st.write("Welcome! Use this assistant to get quick details on academic timelines and campus services.")
+    st.write("Welcome to the official student chatbot for **Marwadi University**.")
     
     st.divider()
     
-    st.subheader("📌 Available Topics")
+    st.subheader("📌 Quick Topics")
     for topic in TOPICS_LIST:
         st.write(f"- {topic}")
     
+    st.divider()
     if st.button("🗑️ Clear Chat History", type="secondary"):
         st.session_state.messages = []
         st.rerun()
@@ -294,9 +322,8 @@ if "messages" not in st.session_state:
         {
             "role": "assistant",
             "content": (
-                "Hello! 👋 I am your College Assistant.\n\n"
-                "I can help answer common questions regarding admissions, exams, deadlines, and timings.\n\n"
-                "Type **'help'** for quick instructions or **'today'** to view the current date."
+                "Hello! 👋 I am your **Marwadi University Assistant**.\n\n"
+                "You can ask me about **my college**, **library timings**, admissions, exams, or type **'help'** to view all topics."
             )
         }
     ]
@@ -307,13 +334,11 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # User Input Processing
-if prompt := st.chat_input("Ask a question (e.g., 'When are exams?')..."):
-    # Render User Message
+if prompt := st.chat_input("Ask a question (e.g., 'Tell me about my college')..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Generate & Render Bot Response
     bot_reply = chatbot_response(prompt)
     st.session_state.messages.append({"role": "assistant", "content": bot_reply})
     with st.chat_message("assistant"):
