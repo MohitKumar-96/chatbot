@@ -2,6 +2,8 @@
 
 An interactive, rule-based web chatbot built with **Python** and **Streamlit**. Designed for college students, prospective applicants, and faculty to instantly access key academic dates, campus policies, operating hours, and administrative procedures.
 
+#Demo Link: https://chatbot96.streamlit.app
+
 ---
 
 ## ✨ Features
@@ -37,5 +39,5 @@ Ensure you have **Python 3.8+** installed on your system.
 
 1. **Clone the repository** (or download the source code):
    ```bash
-   git clone [https://github.com/your-username/college-student-chatbot.git](https://github.com/your-username/college-student-chatbot.git)
-   cd college-student-chatbot
+   git clone  https://github.com/MohitKumar-96/chatbot
+   cd  chatbot
